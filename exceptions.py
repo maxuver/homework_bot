@@ -1,22 +1,34 @@
-class GetStatusException(Exception):
-    """Ошибка при получении статуса домашнего задания."""
+class BaseError(Exception):
+    """Base exception."""
+
     pass
 
 
-class HomeworkServiceError(Exception):
-    """.
-    Класс исключений для ошибок.
-    """
+class ImproperlyConfigured(BaseError):
+    """Exception raised when required configuration is missing."""
+
     pass
 
 
-class WrongStatusError(HomeworkServiceError):
-    """
-    Исключение возникает в случае, если в ответе получен не предусмотренный
-    словарем статус работы.
-    """
+class BaseAPIError(BaseError):
+    """Exception raised when API returns not OK response."""
+
     pass
 
 
-class GetAPIAnswerException(Exception):
+class ResponseTypeError(BaseAPIError, TypeError):
+    """Exception raised when response type does not match docs."""
+
+    pass
+
+
+class EmptyResponseError(BaseError):
+    """Exception raised when response.homeworks list is empty."""
+
+    pass
+
+
+class APIRequestError(BaseAPIError):
+    """Exception raised when API returns not OK response."""
+
     pass

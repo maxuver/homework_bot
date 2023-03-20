@@ -1,10 +1,8 @@
 class BaseError(Exception):
     """Base exception."""
 
-    pass
 
-
-class ImproperlyConfigured(BaseError):
+class ImproperlyConfiguredError(BaseError):
     """Exception raised when required configuration is missing."""
 
     pass

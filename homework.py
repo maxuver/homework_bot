@@ -44,7 +44,7 @@ def send_message(bot: telegram.bot.Bot, message: str):
     logger.debug('Начата отправка сообщения в Telegram')
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
-    except Exception:
+    except telegram.error.TelegramError:
         logger.error('Что-то не так, сообщение в телеграм не отправлено!')
     else:
         logger.debug('Сообщение в телеграм отправлено успешно!')
@@ -84,10 +84,10 @@ def parse_status(homework: dict):
         raise KeyError('В ответе API домашки нет ключа <status>')
     if 'homework_name' not in homework:
         raise KeyError('В ответе API домашки нет ключа <homework_name>')
-    homework_name = homework.get('homework_name')
+    homework_name = homework[('homework_name')]
     homework_status = homework.get('status')
     if homework_status not in HOMEWORK_VERDICTS:
-        raise KeyError('АPI домашки вернул неизвестный статус!')
+        raise KeyError('Не поддерживаемый статус')
     verdict = HOMEWORK_VERDICTS[homework_status]
     return ('Изменился статус проверки работы '
             f'"{homework_name}". {verdict}')
@@ -96,9 +96,10 @@ def parse_status(homework: dict):
 def main():
     """Основная логика работы бота."""
     logger.info('Бот запущен')
+    message_to_check_the_token = 'Проверьте Токены API, ID чата!'
     if not check_tokens():
-        logger.critical('Проверьте Токены API, ID чата!')
-        sys.exit('Проверьте Токены API, ID чата!')
+        logger.critical(message_to_check_the_token)
+        sys.exit(message_to_check_the_token)
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     timestamp = int(time.time())
     message_check = ''
